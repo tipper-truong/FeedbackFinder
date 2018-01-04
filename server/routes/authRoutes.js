@@ -15,7 +15,7 @@ module.exports = (app) => {
 		res.send(req.user);
 	});
 
-	app.get('/api/current_user', (req, res) => { // req = incoming request, res = outgoing response
+	app.get('/api/current_user', (req, res) => {
 		console.log(req);
 		res.send(req.user);
 	});
