@@ -28,19 +28,19 @@ new GoogleStrategy(
 			proxy: true
 		}, 
 
-		(accessToken, refreshToken, profile, done) => {
-			User.findOne({ googleId: profile.id })
-				.then((existingUser) => {
+		async (accessToken, refreshToken, profile, done) => {
+			const existingUser = await User.findOne({ googleId: profile.id });
+
 					if(existingUser) {
 						// user already exists
-						done(null, existingUser); //null = no error
-					} else {
-						// make a new user
-						new User({ googleId: profile.id }) // New Model Instance
-							.save()
-							.then(user => done(null, user));
-					}
-				});
+						return done(null, existingUser); //null = no error
+					} 
+					
+					// make a new user
+					const user = await new User({ googleId: profile.id }).save()
+					done(null, user);
+					
+				
 		}
 	)
 );
