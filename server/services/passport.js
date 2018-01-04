@@ -8,7 +8,7 @@ const User = mongoose.model('users');
 // done function --> if successful, attaches the user to the request, also managed internally by passport
 
 passport.serializeUser((user, done) => {
-	done(null, user.id); // user.id = _id: {...}
+	done(null, user.id); // user.id = _id: {...} from MongoDB
 });
 
 passport.deserializeUser((id, done) => {
@@ -24,7 +24,8 @@ new GoogleStrategy(
 		{
 			clientID: keys.googleClientID,
 			clientSecret: keys.googleClientSecret,
-			callbackURL: '/auth/google/callback'
+			callbackURL: '/auth/google/callback',
+			proxy: true
 		}, 
 
 		(accessToken, refreshToken, profile, done) => {
