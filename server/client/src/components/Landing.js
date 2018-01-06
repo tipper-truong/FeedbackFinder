@@ -7,7 +7,7 @@ const Landing = () => {
 			<h1>
 				FeedbackFinder
 			</h1>
-			Collect feedback forms from your users
+			Learn how to improve your business by asking your consumers
 		</div>
 	);
 };
