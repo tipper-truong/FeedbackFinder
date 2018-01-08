@@ -7,27 +7,36 @@ const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 const Survey = mongoose.model('surveys');
 
 module.exports = app => {
-	app.post('/api/surveys', requireLogin, requireCredits, (req, res) => {
-		
-		console.log("Request", req);
-		console.log("Response", res);
+	
+  app.get('/api/surveys/thanks', (req, res) => {
+    res.send('Thanks for voting!');
+  });
 
-		const { title, subject, body, recipients } = req.body;
+  app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
+    const {title, subject, body, recipients } = req.body;
 
-		const survey = new Survey({
-			title,
-			subject,
-			body,
-			recipients: recipients.split(',')
-								  .map(email => ({ email: email.trim() })),
-			_user: req.user.id,
-			dateSent: Date.now()
+    const survey = new Survey( {
+      title,
+      subject,
+      body,
+      recipients: recipients.split(',').map(email => ({ email: email.trim() })),
+      _user: req.user.id,
+      dateSent: Date.now()
+    });
 
-		});
+    // Great place to send an email!
+    const mailer = new Mailer(survey, surveyTemplate(survey));
 
-		// Send Email to recipients
-	 	const mailer = new Mailer(survey, surveyTemplate(survey));
-	 	mailer.send();
+    try {
+      await mailer.send(); //async function. Must wait for this to finish.
+      await survey.save();
+      req.user.credits -= 1;
+      const user = await req.user.save();
 
-	});
+      res.send(user);
+    } catch (err) {
+      res.status(422).send(err) // something is wrong
+    }
+
+  });
 };
