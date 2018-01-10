@@ -11,8 +11,9 @@
     "start": "node server/index.js",
     "server": "nodemon server/index.js",
     "client": "npm run start --prefix server/client",
-    "dev": "concurrently \"npm run server\" \"npm run client\" ",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix server/client && npm run build --prefix server/client"
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run webhook\" ",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix server/client && npm run build --prefix server/client",
+    "webhook": "ngrok http 5000"
   },
   "author": "",
   "license": "ISC",
@@ -24,11 +25,14 @@
     "duplexer": "^0.1.1",
     "express": "^4.16.2",
     "jquery": "^3.2.1",
+    "localtunnel": "^1.8.3",
+    "lodash": "^4.17.4",
     "materialize-css": "^0.100.2",
     "mongoose": "^5.0.0-rc1",
     "nodemon": "^1.14.7",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^1.0.0",
+    "path-parser": "^3.0.1",
     "react-stripe-checkout": "^2.6.3",
     "sendgrid": "^5.2.3",
     "stripe": "^5.4.0"
